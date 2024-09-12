@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="promo" class="promo-sect">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <h2 id="services">Мы предлагаем:</h2>
+    <div class="coloumns_3">
+    {% for item in promo %}
+        <div class="coloumn">
+            <div class="coloumns_3__img">
+                <img src="{% static item.image %}" alt="">
+            </div>
+            <h3>{{ item.work }}</h3>
+            <h5>{{ item.about_work }}</h5>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<section id="photos" class="container">
+    <h2>Ремонт на разный "кошелек", в доме, на улице</h2>
+    <div class="slider-container">
+        <div class="slider">
+            {% for con in contracts %}
+                {% if con.is_onsite %}
+                    <div class="slide-box">
+                        <h3>{{con.name }} от {{ con.date_create }}</h3>
+                        <div class="object-box">
+                            {% for photo in con.photos.all %}
+                                {% if forloop.counter < 7 %}
+                                    <div class="object-box-img">
+                                        <img src="{{ photo.photo.url }}" onclick="displayModal(this);">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button class="prev-button" aria-label="Посмотреть предыдущий слайд">&lt</button>
+        <button class="next-button" aria-label="Посмотреть следующий слайд">&gt</button>
+    </div>
+    <div id="modal" class="modal" onclick="hideModal();">
+      <div class="modal-flex">
+          <div class="modal-content">
+              <img id="modal-image">
+          </div>
+
+      </div>
+    </div>
+</section>
+
+<section id="about" class="container">
+    <h2>Есть вопросы? Предложения?</h2>
+    <div class="box_phone">
+        <img src="{% static 'masters/images/at-solid-16.svg' %}" alt="">
+        {% comment %}
+        <p><a href="{% url 'comments:contact_us' %}">horosho@mail.ru</a></p>
+        {% endcomment %}
+        <p><a href="#">horosho@mail.ru</a></p>
+    </div>
+    <div class="box_phone">
+        <img src="{% static 'masters/images/phone-flip-solid-16.svg' %}" alt="">
+        <p>+7 (950)&ndash;850&ndash;36&ndash;64, +7 (928)&ndash;123&ndash;45&ndash;67</p>
+    </div>
+    <div class="box_phone">
+        <p >Наш канал:</p> <a class="share-yt" href="https://t.me/rustamrepairs" target="_blank" rel="nofollow">Ремонт квартир</a>
+    </div>
+</section>
+<script src="{% static 'masters/js/script.js' %}"></script>
+{% endblock %}

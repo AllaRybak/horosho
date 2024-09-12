@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="sect container">
+    <h2>Обратная связь</h2>
+    <div class="block-center">
+        <form method="post" id="form-contact-us" action="{% url 'comments:contact_us' %}">
+            {% csrf_token %}
+            {% for f in form %}
+                <div class="form-error">{{ f.non_field_errors }}</div>
+                <div class="form-error">{{ f.errors }}</div>
+                <p>{{ f }}</p>
+            {% endfor %}
+            <button type="submit" class="form-button">Отправить</button>
+        </form>
+    </div>
+    <div class="box_phone">
+        <img src="{% static 'masters/images/phone-flip-solid.svg' %}" alt="">
+        <p>+7 (928)&ndash;123&ndash;45&ndash;67, +7 (950)&ndash;850&ndash;36&ndash;64</p>
+    </div>
+</section>
+{% endblock %}

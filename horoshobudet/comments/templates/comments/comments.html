@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load comment_tags %}
+{% block content %}
+<section class="sect container">
+    <h2>{{ title }}</h2>
+    <p>Оставлено отзывов: {% total_comments %}.</p>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="comments-blocks">
+        <ul>
+            {% for c in comments %}
+                <li class="com-block">
+                    <div class="comment-about">
+                        <p>
+                            {{ c.author }}
+                        </p>
+                        <p>
+                            {{ c.date_create|date:'d-m-Y' }}
+                        </p>
+                    </div>
+                    <div class="comments-text">
+                        {% autoescape on %}
+                            {{ c.comment }}
+                        {% endautoescape %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if request.user.is_authenticated %}
+            <p class="do-something"><a href="{% url 'comments:add_comment' %}">Оставить отзыв</a></p>
+        {% else %}
+            <p class="do-something"><a href="{% url 'users:login' %}">Зарегистрируйтесь, чтобы оставить отзыв</a></p>
+        {% endif %}
+    </div>
+
+    <div id="modal" class="modal" onclick="hideModal();">
+        <div class="modal-flex">
+            <div class="modal-content">
+                {% autoescape on %}
+                <div id="modal-comment">
+                     <p></p>
+                </div>
+                {% endautoescape %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+    <div class="list-pages">
+    <ul>
+        {% if page_obj.has_previous %}
+            <li class="page-num">
+                <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;</a>
+            </li>
+        {% endif %}
+        {% for p in paginator.page_range %}
+        {% if page_obj.number == p %}
+        <li class="page-num page-num-selected">{{ p }}</li>
+                   {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2  %}
+        <li class="page-num">
+            <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-num">
+            <a href="?page={{ page_obj.next_page_number }}">&gt;&gt;</a>
+        </li>
+{% endif %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
+<!--    <div class="pagination">-->
+<!--        <span class="step-links">-->
+<!--            {% if page_obj.has_previous %}-->
+<!--                <a href="?page=1">&laquo; В начало</a>-->
+<!--                <a href="?page={{ page_obj.previous_page_number }}">Назад</a>-->
+<!--            {% endif %}-->
+<!--            <span class="current">-->
+<!--                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.-->
+<!--            </span>-->
+<!--            {% if page_obj.has_next %}-->
+<!--                <a href="?page={{ page_obj.next_page_number }}">Вперёд</a>-->
+<!--                <a href="?page={{ page_obj.paginator.num_pages }}">В конец &raquo;</a>-->
+<!--            {% endif %}-->
+<!--        </span>-->
+<!--    </div>-->

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="sect container">
+    <h2>Оставьте Ваш отзыв</h2>
+    <div class="block-center">
+        <form method="post" class="form-block-report">
+            {% csrf_token %}
+            {% for f in form %}
+                <div class="form-error">{{ f.errors }}</div>
+                <p>{{ f }}</p>
+            {% endfor %}
+            <button type="submit" class="form-button">Отправить</button>
+        </form>
+    </div>
+</section>
+{% endblock content %}

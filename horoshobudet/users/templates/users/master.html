@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load user_tags %}
+{% block content %}
+<section id="master" class="container sect">
+<h2>{{ title|truncatechars:30  }} </h2>
+
+<!--    БЛОК С КАТЕГОРИЯМИ СЛЕВА-->
+<div class="menu-tags">
+    <p>Выбрать навык:</p>
+     <ul id="categories" class="tags-list">
+        <li><a href="{% url 'users:masters' %}">Все навыки:</a></li>
+        <li>{% show_all_tags %}</li>
+     </ul>
+</div>
+<!--  END  БЛОК С КАТЕГОРИЯМИ СЛЕВА-->
+
+<div class="master-in-masters">
+    <div class="master-photo-name">
+        {% if master.photo %}
+            <p><img src="{{ master.photo.url }}" width="250" height="170">
+        {% else %}
+            <p><img src="{{ default_image }}">
+        {% endif %}
+    </div>
+    <div class="master-info">
+        <p>Почта:
+            {% if master.email %}
+                {{ master.email }}
+            {% endif %}
+        </p>
+        <p>
+            Телефон:
+            {% if master.phone_number %}
+                {{ master.phone_number }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+<p>{{ master.content|linebreaks }}</p>
+<div class="tags-of-master">
+    {% with master.tags.all as tags %}
+        {% if tags %}
+            <ul class="menu">
+                <li><p>Навыки:</p></li>
+                {% for t in tags %}
+                    <li><p><a href="{{ t.get_absolute_url }}">{{ t.tag }}</a></p></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+</section>
+{% endblock %}

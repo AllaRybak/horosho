@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Здравствуйте!
+
+Через сайт "Всё будет хорошо" поступило новое сообщение :
+
+    {{ text_mes }}
+
+    Email отправителя: {{ email }}
+    {% if user %} Пользователь: {{ user.username }}{% endif %}
+
+{% endautoescape %}
+

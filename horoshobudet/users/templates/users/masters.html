@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load user_tags %}
+{% block content %}
+
+<section id="masters" class="container sect">
+<!--    БЛОК С КАТЕГОРИЯМИ СЛЕВА-->
+<div class="menu-tags">
+    <p>Выбрать навык:</p>
+    <ul id="categories" class="tags-list">
+        <li><a href="{% url 'users:masters' %}">Все навыки:</a></li>
+        <li>{% show_all_tags %}</li>
+    </ul>
+</div>
+<!--  END  БЛОК С КАТЕГОРИЯМИ СЛЕВА-->
+<h2>{{ title }}</h2>
+<ul>
+    {% for master in masters %}
+     <li class="master-in-masters">
+         <div class="master-photo-name">
+            {% if master.photo %}
+                <p><img src="{{ master.photo.url }}" width="250" height="170"></p>
+            {% else %}
+                <p><img src="{{ default_image }}"></p>
+            {% endif %}
+            <h4><a href="{{ master.get_absolute_url }}">{{ master.username|truncatechars:20 }}</a></h4>
+         </div>
+        <div class="master-info">
+            <p class="tags-master">{{ master.tags.all|join:", " }}</p>
+            {% autoescape off %}
+                <p>{{ master.content|linebreaks|truncatewords:20 }}</p>
+            {% endautoescape %}
+            <p class="link-read-info"><a href="{{ master.get_absolute_url }}">Больше информации</a></p>
+        </div>
+     </li>
+    {% if not forloop.last %}
+        <hr>
+    {% endif %}
+    {% endfor %}
+</ul>
+
+</section>
+{% endblock %}
+
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+<div class="list-pages">
+    <ul>
+        {% if page_obj.has_previous %}
+            <li class="page-num">
+                <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;</a>
+            </li>
+        {% endif %}
+        {% for p in paginator.page_range %}
+        {% if page_obj.number == p %}
+        <li class="page-num page-num-selected">{{ p }}</li>
+                   {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2  %}
+        <li class="page-num">
+            <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="page-num">
+                <a href="?page={{ page_obj.next_page_number }}">&gt;&gt;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}
